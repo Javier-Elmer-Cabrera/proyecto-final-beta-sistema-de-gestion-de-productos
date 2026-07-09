@@ -28,7 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class StockQueryPanel extends AbstractFunctionPanel {
-    private final String[] header = new String[]{"N.°", "ID", "Nombre", "Categoría", "Especificación", "N.° de Pieza", "N.° de Serie", "N.° de Estante", "Fecha de Compra", "Proveedor", "Tipo de Ingreso",
+    private final String[] header = new String[]{"N° de Ingreso", "Nombre", "Categoría", "Especificación", "N.° de Pieza", "N.° de Serie", "N.° de Estante", "Fecha de Compra", "Proveedor", "Tipo de Ingreso",
             "Cantidad Restante", "Unidad", "Precio",};
     private JPanel formPanel = null;
     private JPanel buttonPanel;
@@ -321,7 +321,6 @@ public class StockQueryPanel extends AbstractFunctionPanel {
 
     private void showListInGrid(List<Item> brsL) {
         dataModel.resetModel();
-        int sn = 0;
         for (Item bo : brsL) {
             String addedType;
             if (bo.getAddedType() == Item.ADD_TYPE_NEW_ENTRY) {
@@ -333,7 +332,7 @@ public class StockQueryPanel extends AbstractFunctionPanel {
             String unitValue = bo.getUnitsString() != null ? bo.getUnitsString().getValue() : "";
             String catName = bo.getCategory() != null ? bo.getCategory().getCategoryName() : "";
             String vendorName = bo.getVendor() != null ? bo.getVendor().getName() : "";
-            dataModel.addRow(new Object[]{++sn, bo.getId(), bo.getName(), catName, bo.getSpeciifcationString(), bo.getPartsNumber(),
+            dataModel.addRow(new Object[]{bo.getId(), bo.getName(), catName, bo.getSpeciifcationString(), bo.getPartsNumber(),
                     bo.getSerialNumber(), bo.getRackNo(), DateTimeUtils.getCvDateMMMddyyyy(bo.getPurchaseDate()), vendorName, addedType, bo.getQuantity(), unitValue,
                     bo.getRate()});
         }

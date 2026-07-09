@@ -2,20 +2,20 @@ package com.ca.core;
 
 /**
  * Cola (Queue) personalizada implementada mediante nodos enlazados dinámicamente.
- * <p>
+ * 
  * Sigue la política FIFO (First-In, First-Out): el primer elemento en
  * ingresar (enqueue) es el primero en salir (dequeue). Es la estructura ideal
  * para gestionar órdenes de compra pendientes, donde la prioridad es atender
  * las solicitudes en el orden cronológico exacto en que llegaron.
- * </p>
- * <p>
- * <b>Complejidad algorítmica:</b>
- * <ul>
- *   <li>enqueue() = O(1) — inserción al final</li>
- *   <li>dequeue() = O(1) — extracción del frente</li>
- *   <li>peek()    = O(1) — consulta sin extraer</li>
- * </ul>
- * </p>
+ * 
+ * 
+ * Complejidad algorítmica:
+ * 
+ *   enqueue() = O(1) — inserción al final
+ *   dequeue() = O(1) — extracción del frente
+ *   peek()    = O(1) — consulta sin extraer
+ * 
+ * 
  *
  * @param <T> tipo de los elementos almacenados
  */
@@ -24,10 +24,10 @@ public class CustomQueue<T> {
     /**
      * Nodo interno con enlace al siguiente nodo (puntero "siguiente").
      * La cola se mantiene con dos referencias:
-     * <ul>
-     *   <li><b>head (frente):</b> apunta al nodo más antiguo (primero en salir)</li>
-     *   <li><b>tail (final):</b> apunta al nodo más reciente (último en llegar)</li>
-     * </ul>
+     * 
+     *   head (frente): apunta al nodo más antiguo (primero en salir)
+     *   tail (final): apunta al nodo más reciente (último en llegar)
+     * 
      */
     private static class Node<T> {
         T data;          // Dato almacenado en el nodo
@@ -56,15 +56,15 @@ public class CustomQueue<T> {
 
     /**
      * Encola (inserta) un elemento al final de la cola.
-     * <p>
+     * 
      * Algoritmo:
      * <ol>
-     *   <li>Crear un nuevo nodo con el dato</li>
-     *   <li>Si la cola está vacía, head y tail apuntan al nuevo nodo</li>
-     *   <li>Si no, el next del tail actual apunta al nuevo nodo, y tail se mueve</li>
-     *   <li>Incrementar size</li>
+     *   Crear un nuevo nodo con el dato
+     *   Si la cola está vacía, head y tail apuntan al nuevo nodo
+     *   Si no, el next del tail actual apunta al nuevo nodo, y tail se mueve
+     *   Incrementar size
      * </ol>
-     * </p>
+     * 
      *
      * @param item elemento a encolar (no puede ser null)
      * @throws IllegalArgumentException si el elemento es null
@@ -91,16 +91,16 @@ public class CustomQueue<T> {
 
     /**
      * Desencola (extrae) el elemento del frente de la cola.
-     * <p>
+     * 
      * Algoritmo:
      * <ol>
-     *   <li>Si la cola está vacía, lanza QueueEmptyException</li>
-     *   <li>Guardar el dato del head</li>
-     *   <li>Mover head al siguiente nodo</li>
-     *   <li>Si la cola quedó vacía, tail también se pone en null</li>
-     *   <li>Decrementar size y retornar el dato</li>
+     *   Si la cola está vacía, lanza QueueEmptyException
+     *   Guardar el dato del head
+     *   Mover head al siguiente nodo
+     *   Si la cola quedó vacía, tail también se pone en null
+     *   Decrementar size y retornar el dato
      * </ol>
-     * </p>
+     * 
      *
      * @return el elemento del frente
      * @throws QueueEmptyException si la cola está vacía
@@ -124,21 +124,21 @@ public class CustomQueue<T> {
 
     /**
      * Encola un elemento al FRENTE de la cola (no al final).
-     * <p>
+     * 
      * Método necesario para el patrón Undo: cuando se revierte una orden
      * procesada (undo), la orden debe regresar a su posición original
      * en el frente de la cola.
-     * </p>
-     * <p>
+     * 
+     * 
      * Algoritmo:
      * <ol>
-     *   <li>Crear un nuevo nodo con el dato</li>
-     *   <li>El nuevo nodo apunta al head actual</li>
-     *   <li>Head se mueve al nuevo nodo</li>
-     *   <li>Si la cola estaba vacía, tail también apunta al nuevo nodo</li>
-     *   <li>Incrementar size</li>
+     *   Crear un nuevo nodo con el dato
+     *   El nuevo nodo apunta al head actual
+     *   Head se mueve al nuevo nodo
+     *   Si la cola estaba vacía, tail también apunta al nuevo nodo
+     *   Incrementar size
      * </ol>
-     * </p>
+     * 
      *
      * @param item elemento a encolar al frente
      * @throws IllegalArgumentException si el elemento es null
@@ -162,21 +162,21 @@ public class CustomQueue<T> {
 
     /**
      * Elimina y retorna el último elemento de la cola (el del tail).
-     * <p>
+     * 
      * Método necesario para el patrón Undo de EnqueueOrderCommand:
      * cuando se revierte una orden encolada, se debe eliminar el
      * elemento que acabamos de agregar al final de la cola.
-     * </p>
-     * <p>
+     * 
+     * 
      * Algoritmo:
      * <ol>
-     *   <li>Si la cola está vacía, lanza QueueEmptyException</li>
-     *   <li>Si head == tail (un solo elemento), se vacía la cola</li>
-     *   <li>Si no, se recorre desde head hasta el penúltimo nodo</li>
-     *   <li>El tail se mueve al penúltimo nodo, y su next se pone en null</li>
-     *   <li>Decrementar size y retornar el dato</li>
+     *   Si la cola está vacía, lanza QueueEmptyException
+     *   Si head == tail (un solo elemento), se vacía la cola
+     *   Si no, se recorre desde head hasta el penúltimo nodo
+     *   El tail se mueve al penúltimo nodo, y su next se pone en null
+     *   Decrementar size y retornar el dato
      * </ol>
-     * </p>
+     * 
      *
      * @return el elemento eliminado del final
      * @throws QueueEmptyException si la cola está vacía

@@ -32,7 +32,7 @@ import java.util.Date;
 import java.util.List;
 
 public class ItemEntryPanel extends AbstractFunctionPanel {
-    private final String[] header = new String[]{"N.°", "N.° de Ingreso", "N.° de Orden de Compra", "Nombre", "Categoría", "Especificación",
+    private final String[] header = new String[]{"N° de Ingreso", "N.° de Orden de Compra", "Nombre", "Categoría", "Especificación",
             "N.° de Pieza", "N.° de Serie", "N.° de Estante", "Fecha de Compra", "Fecha de Ingreso", "Proveedor", "Cantidad Original", "Cantidad en Stock", "Precio", "Unidad",
             "Total"};
     private JPanel formPanel = null;
@@ -335,7 +335,7 @@ public class ItemEntryPanel extends AbstractFunctionPanel {
         v.addTask(currentSpecificationPanel, "Especificación requerida", null, true);
         v.addTask(txtPurDate, "", null, true, true);
         v.addTask(txtQuantity, "Requerido", null, true);
-        v.addTask(txtEntrynumber, "Requerido", null, true);
+        // Opcional: si se llena, se usa como ID del Item en el BST
         v.addTask(cmbUnitcombo, "Requerido", null, true);
 
     }
@@ -438,15 +438,18 @@ public class ItemEntryPanel extends AbstractFunctionPanel {
                     bo.setCurrentFiscalYear(DateTimeUtils.getCurrentFiscalYear());
                     MemoryRepository.getInstance().saveOrUpdate(bo);
                 } else {
-                    // Verificar duplicado por nombre antes de insertar
-                    Item existing = MemoryRepository.getInstance().getItemByName(newBo.getName());
-                    if (existing != null && existing.getdFlag() == 1) {
-                        JOptionPane.showMessageDialog(null,
-                                "Ya existe un producto con el nombre \"" + newBo.getName()
-                                        + "\" (ID: " + existing.getId() + ").\n"
-                                        + "Use el botón Modify para actualizarlo.",
-                                "Producto duplicado", JOptionPane.WARNING_MESSAGE);
-                        return;
+                    // Si el usuario asignó un N° de Ingreso manual, verificar que no exista
+                    int customId = newBo.getId();
+                    if (customId > 0) {
+                        Item existingById = MemoryRepository.getInstance().getItemById(customId);
+                        if (existingById != null && existingById.getdFlag() == 1) {
+                            JOptionPane.showMessageDialog(null,
+                                    "Ya existe un producto con el N° de Ingreso \"" + customId
+                                            + "\" (" + existingById.getName() + ").\n"
+                                            + "Use otro número o deje el campo vacío para auto-asignación.",
+                                    "ID duplicado", JOptionPane.WARNING_MESSAGE);
+                            return;
+                        }
                     }
                     // save new
                     newBo.setdFlag(1);
@@ -644,14 +647,13 @@ public class ItemEntryPanel extends AbstractFunctionPanel {
 
     private void showListInGrid(List<Item> brsL) {
         dataModel.resetModel();
-        int sn = 0;
         for (Item bo : brsL) {
             BigDecimal total = bo.getRate().multiply(new BigDecimal(bo.getQuantity()));
 
             String unitValue = bo.getUnitsString() != null ? bo.getUnitsString().getValue() : "";
             String catName = bo.getCategory() != null ? bo.getCategory().getCategoryName() : "";
             String vendorName = bo.getVendor() != null ? bo.getVendor().getName() : "";
-            dataModel.addRow(new Object[]{++sn, bo.getId(), bo.getPurchaseOrderNo(), bo.getName(),
+            dataModel.addRow(new Object[]{bo.getId(), bo.getPurchaseOrderNo(), bo.getName(),
                     catName, bo.getSpeciifcationString(), bo.getPartsNumber(), bo.getSerialNumber(),
                     bo.getRackNo(), DateTimeUtils.getCvDateMMMddyyyy(bo.getPurchaseDate()), DateTimeUtils.getCvDateMMMddyyyy(bo.getAddedDate()),
                     vendorName, bo.getOriginalQuantity(), bo.getQuantity(), bo.getRate(), unitValue, total});

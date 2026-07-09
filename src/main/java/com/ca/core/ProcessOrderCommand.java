@@ -4,20 +4,20 @@ import com.ca.db.model.Item;
 
 /**
  * Comando concreto que encapsula la acción de procesar una orden de compra.
- * <p>
+ * 
  * Al ejecutarse ({@link #execute()}), desencola la orden del frente de la
  * cola FIFO ({@link CustomQueue}) y actualiza el stock del producto.
  * Al deshacerse ({@link #undo()}), restaura el stock al valor anterior y
  * vuelve a encolar la orden al frente de la cola (simulando que nunca
  * se procesó).
- * </p>
+ * 
  *
- * <p>
+ * 
  * <b>Guardado de estado:</b> Antes de modificar el stock, el comando
  * captura la cantidad anterior del item para poder restaurarla en undo().
  * La orden se guarda en el momento de ejecutar ({@link #execute()}), no
  * en el constructor, porque el desencolado ocurre dentro del execute().
- * </p>
+ * 
  */
 public class ProcessOrderCommand implements Command {
 
@@ -51,12 +51,12 @@ public class ProcessOrderCommand implements Command {
 
     /**
      * Ejecuta el procesamiento de la orden:
-     * <ol>
-     *   <li>Desencola la orden del frente de la cola (dequeue)</li>
-     *   <li>Guarda el stock anterior del item</li>
-     *   <li>Suma la cantidad de la orden al stock del item</li>
-     *   <li>Marca la orden como COMPLETED</li>
-     * </ol>
+     * 
+     *   Desencola la orden del frente de la cola (dequeue)
+     *   Guarda el stock anterior del item
+     *   Suma la cantidad de la orden al stock del item
+     *   Marca la orden como COMPLETED
+     * 
      */
     // REQUISITO: Desencola (dequeue) del frente de la CustomQueue FIFO (O(1)).
     // Guarda el estado previo del stock para poder restaurarlo en undo().
@@ -81,12 +81,12 @@ public class ProcessOrderCommand implements Command {
 
     /**
      * Revierte el procesamiento de la orden:
-     * <ol>
-     *   <li>Restaura el stock del item a su valor anterior</li>
-     *   <li>Vuelve a encolar la orden al FRENTE de la cola
-     *       (no al final, porque esa era su posición original)</li>
-     *   <li>Marca la orden como PENDING nuevamente</li>
-     * </ol>
+     * 
+     *   Restaura el stock del item a su valor anterior
+     *   Vuelve a encolar la orden al FRENTE de la cola
+     *       (no al final, porque esa era su posición original)
+     *   Marca la orden como PENDING nuevamente
+     * 
      */
     // REQUISITO: Revierte dequeue() restaurando el stock y re-encolando al frente (enqueueFront).
     @Override

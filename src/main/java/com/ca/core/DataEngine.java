@@ -7,6 +7,7 @@ import com.gt.common.utils.DateTimeUtils;
 import com.gt.common.utils.PasswordUtil;
 import com.gt.common.utils.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -211,48 +212,169 @@ public final class DataEngine {
      */
     public void cargarDatosPrueba() {
 
-        // Usuario administrador por defecto (credenciales: ADMIN / ADMIN)
+        // ────────────────────────────────────────────
+        // Usuario administrador (credenciales: ADMIN / ADMIN)
+        // ────────────────────────────────────────────
         LoginUser admin = new LoginUser();
         admin.setdFlag(1);
         admin.setUsername("ADMIN");
         admin.setPassword(PasswordUtil.getSha256("ADMIN"));
         guardarLoginUser(admin);
 
-        // Categoría por defecto (retornable)
-        Category catDefault = new Category();
-        catDefault.setCategoryName("Default Category");
-        catDefault.setCategoryType(Category.TYPE_RETURNABLE);
-        catDefault.setdFlag(1);
-        catDefault.setLastModifiedDate(new Date());
-        guardarCategoria(catDefault);
-
-        // Proveedor por defecto
-        Vendor vendorDefault = new Vendor();
-        vendorDefault.setName("Default Vendor");
-        vendorDefault.setdFlag(1);
-        vendorDefault.setLastModifiedDate(new Date());
-        guardarVendor(vendorDefault);
-
+        // ────────────────────────────────────────────
         // Sucursal principal
+        // ────────────────────────────────────────────
         BranchOffice officeDefault = new BranchOffice();
         officeDefault.setName("Main Office");
         officeDefault.setdFlag(1);
         officeDefault.setLastModifiedDate(new Date());
         guardarBranchOffice(officeDefault);
 
-        // Unidad de medida por defecto
-        UnitsString unitsDefault = new UnitsString();
-        unitsDefault.setValue("pcs");
-        unitsDefault.setdFlag(1);
-        unitsDefault.setDateTime(new Date());
-        guardarUnitsString(unitsDefault);
+        // ────────────────────────────────────────────
+        // CATEGORÍAS (3)
+        // ────────────────────────────────────────────
+        Category catElectronicos = new Category();
+        catElectronicos.setCategoryName("Electrónicos");
+        catElectronicos.setCategoryType(Category.TYPE_RETURNABLE);
+        catElectronicos.setdFlag(1);
+        catElectronicos.setLastModifiedDate(new Date());
+        catElectronicos.setSpecification1("Estado");
+        guardarCategoria(catElectronicos);
 
-        // Especificación estándar
-        Specification specDefault = new Specification();
-        specDefault.setSpecification1("Standard");
-        specDefault.setdFlag(1);
-        specDefault.setActiveStatus(1);
-        guardarSpecification(specDefault);
+        Category catOficina = new Category();
+        catOficina.setCategoryName("Oficina");
+        catOficina.setCategoryType(Category.TYPE_RETURNABLE);
+        catOficina.setdFlag(1);
+        catOficina.setLastModifiedDate(new Date());
+        catOficina.setSpecification1("Estado");
+        guardarCategoria(catOficina);
+
+        Category catLimpieza = new Category();
+        catLimpieza.setCategoryName("Limpieza");
+        catLimpieza.setCategoryType(Category.TYPE_NON_RETURNABLE);
+        catLimpieza.setdFlag(1);
+        catLimpieza.setLastModifiedDate(new Date());
+        guardarCategoria(catLimpieza);
+
+        // ────────────────────────────────────────────
+        // PROVEEDORES (3)
+        // ────────────────────────────────────────────
+        Vendor vTech = new Vendor();
+        vTech.setName("TechSupply S.A.");
+        vTech.setdFlag(1);
+        vTech.setLastModifiedDate(new Date());
+        guardarVendor(vTech);
+
+        Vendor vOffice = new Vendor();
+        vOffice.setName("Office Depot");
+        vOffice.setdFlag(1);
+        vOffice.setLastModifiedDate(new Date());
+        guardarVendor(vOffice);
+
+        Vendor vClean = new Vendor();
+        vClean.setName("CleanCorp");
+        vClean.setdFlag(1);
+        vClean.setLastModifiedDate(new Date());
+        guardarVendor(vClean);
+
+        // ────────────────────────────────────────────
+        // UNIDADES DE MEDIDA (3)
+        // ────────────────────────────────────────────
+        UnitsString uUnid = new UnitsString();
+        uUnid.setValue("unid");
+        uUnid.setdFlag(1);
+        uUnid.setDateTime(new Date());
+        guardarUnitsString(uUnid);
+
+        UnitsString uKg = new UnitsString();
+        uKg.setValue("kg");
+        uKg.setdFlag(1);
+        uKg.setDateTime(new Date());
+        guardarUnitsString(uKg);
+
+        UnitsString uLitro = new UnitsString();
+        uLitro.setValue("litro");
+        uLitro.setdFlag(1);
+        uLitro.setDateTime(new Date());
+        guardarUnitsString(uLitro);
+
+        // ────────────────────────────────────────────
+        // ESPECIFICACIONES (2)
+        // ────────────────────────────────────────────
+        Specification specNuevo = new Specification();
+        specNuevo.setSpecification1("Nuevo");
+        specNuevo.setdFlag(1);
+        specNuevo.setActiveStatus(1);
+        guardarSpecification(specNuevo);
+
+        Specification specReac = new Specification();
+        specReac.setSpecification1("Reacondicionado");
+        specReac.setdFlag(1);
+        specReac.setActiveStatus(1);
+        guardarSpecification(specReac);
+
+        // ────────────────────────────────────────────
+        // PRODUCTOS (3) con N° de Ingreso (ID) distintos
+        // IDs: 100, 50, 200 — para demostrar el ordenamiento
+        // del BST (BinaryProductTree) en el Stock Query.
+        //
+        // El BST los ordenará por ID (Inorden):
+        //   50  →  Monitor
+        //  100  →  Laptop
+        //  200  →  Escritorio
+        // ────────────────────────────────────────────
+        int currentFY = DateTimeUtils.getCurrentFiscalYear();
+
+        Item item1 = new Item();
+        item1.setId(100);
+        item1.setName("Laptop HP ProBook");
+        item1.setQuantity(10);
+        item1.setOriginalQuantity(10);
+        item1.setRate(new BigDecimal("2500.00"));
+        item1.setRackNo("A-01");
+        item1.setCategory(catElectronicos);
+        item1.setVendor(vTech);
+        item1.setUnitsString(uUnid);
+        item1.setSpecification(specNuevo);
+        item1.setAddedType(Item.ADD_TYPE_NEW_ENTRY);
+        item1.setdFlag(1);
+        item1.setAddedDate(new Date());
+        item1.setCurrentFiscalYear(currentFY);
+        guardarItem(item1);
+
+        Item item2 = new Item();
+        item2.setId(50);
+        item2.setName("Monitor LG 24\"");
+        item2.setQuantity(15);
+        item2.setOriginalQuantity(15);
+        item2.setRate(new BigDecimal("850.00"));
+        item2.setRackNo("A-02");
+        item2.setCategory(catElectronicos);
+        item2.setVendor(vTech);
+        item2.setUnitsString(uUnid);
+        item2.setSpecification(specNuevo);
+        item2.setAddedType(Item.ADD_TYPE_NEW_ENTRY);
+        item2.setdFlag(1);
+        item2.setAddedDate(new Date());
+        item2.setCurrentFiscalYear(currentFY);
+        guardarItem(item2);
+
+        Item item3 = new Item();
+        item3.setId(200);
+        item3.setName("Escritorio Ejecutivo");
+        item3.setQuantity(5);
+        item3.setOriginalQuantity(5);
+        item3.setRate(new BigDecimal("1200.00"));
+        item3.setRackNo("B-01");
+        item3.setCategory(catOficina);
+        item3.setVendor(vOffice);
+        item3.setUnitsString(uUnid);
+        item3.setSpecification(specNuevo);
+        item3.setAddedType(Item.ADD_TYPE_NEW_ENTRY);
+        item3.setdFlag(1);
+        item3.setAddedDate(new Date());
+        item3.setCurrentFiscalYear(currentFY);
+        guardarItem(item3);
     }
 
     // ──────────────────────────────────────────────

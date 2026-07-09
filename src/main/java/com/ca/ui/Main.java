@@ -45,6 +45,7 @@ public class Main {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         }
 
+        // Logs
         File f = new File("log");
         f.mkdir();
 
@@ -53,17 +54,20 @@ public class Main {
 
     private static void startApp() {
 
+        // En Java Swing, toda la interfaz gráfica debe manejarse en un hilo especial 
+        // llamado Event Dispatch Thread (EDT).
         EventQueue.invokeLater(() -> {
 
             if (new AppStarter().alreadyRunning) {
                 setApplicationStartLog();
-                setUpAndShowGui();
+                setUpAndShowGui(); // Inicializa la interfaz gráfica
             } else {
                 System.exit(0);
             }
         });
     }
 
+    // Lanza / Inicializa la estructura en RAM
     private static void setApplicationStartLog() {
         try {
             ApplicationLog log = new ApplicationLog();

@@ -8,28 +8,24 @@ import java.util.List;
 /**
  * Árbol Binario de Búsqueda (ABB / BST) para organizar, ordenar y buscar
  * productos (Items) en memoria RAM.
- * <p>
- * <b>Criterio de ordenamiento:</b> ID del Item ({@link Item#getId()}).
+ * 
+ * Criterio de ordenamiento: ID del Item ({@link Item#getId()}).
  * Los nodos con ID menor se insertan en el subárbol izquierdo; los de ID
- * mayor en el derecho. Esto garantiza que el recorrido <em>Inorden</em>
+ * mayor en el derecho. Esto garantiza que el recorrido Inorden
  * (izquierdo → raíz → derecho) devuelva los productos ordenados
  * ascendentemente por ID sin necesidad de algoritmos externos.
- * </p>
- * <p>
- * <b>Complejidad algorítmica promedio:</b>
- * <ul>
- *   <li>insert() = O(log n) — inserción recursiva comparando ID</li>
- *   <li>searchById() = O(log n) — búsqueda binaria por ID</li>
- *   <li>inOrderToList() = O(n) — recorre todo el árbol una vez</li>
- * </ul>
- * </p>
- *
- * <p>
- * <b>Manejo de duplicados:</b> Si se intenta insertar un Item con un ID
+ * 
+ * 
+ * Complejidad algorítmica promedio:
+ *   insert() = O(log n) — inserción recursiva comparando ID
+ *   searchById() = O(log n) — búsqueda binaria por ID
+ *   inOrderToList() = O(n) — recorre todo el árbol una vez
+ * 
+ * Manejo de duplicados: Si se intenta insertar un Item con un ID
  * que ya existe en el árbol, se lanza {@link IllegalArgumentException}.
  * La actualización de un Item existente debe hacerse mediante
  * {@link #replace(Item)}.
- * </p>
+ * 
  */
 public class BinaryProductTree {
 
@@ -50,20 +46,20 @@ public class BinaryProductTree {
 
     /**
      * Inserta un Item en el árbol ordenado por ID.
-     * <p>
-     * <b>Algoritmo recursivo:</b>
-     * <ol>
-     *   <li><b>Caso base:</b> si el nodo actual es null, se crea un nuevo nodo
-     *       y se retorna (el padre lo enlazará como left o right).</li>
-     *   <li><b>Caso recursivo izquierdo:</b> si el ID del nuevo Item es
+     * 
+     * Algoritmo recursivo:
+     * 
+     *   Caso base: si el nodo actual es null, se crea un nuevo nodo
+     *       y se retorna (el padre lo enlazará como left o right).
+     *   Caso recursivo izquierdo: si el ID del nuevo Item es
      *       menor que el ID del nodo actual, se inserta en el subárbol
-     *       izquierdo ({@code node.left = insertRec(node.left, item)}).</li>
-     *   <li><b>Caso recursivo derecho:</b> si es mayor, se inserta en el
-     *       subárbol derecho.</li>
-     *   <li><b>Duplicado:</b> si es igual, se lanza una excepción para
-     *       evitar colapso del árbol.</li>
-     * </ol>
-     * </p>
+     *       izquierdo ({@code node.left = insertRec(node.left, item)}).
+     *   Caso recursivo derecho: si es mayor, se inserta en el
+     *       subárbol derecho.
+     *   Duplicado: si es igual, se lanza una excepción para
+     *       evitar colapso del árbol.
+     * 
+     * 
      *
      * @param item el producto a insertar
      * @throws IllegalArgumentException si ya existe un Item con el mismo ID
@@ -117,16 +113,16 @@ public class BinaryProductTree {
 
     /**
      * Busca un Item por su ID utilizando la propiedad de orden del BST.
-     * <p>
-     * <b>Algoritmo:</b>
-     * <ol>
-     *   <li>Si el nodo actual es null → no encontrado (null)</li>
-     *   <li>Si el ID buscado es menor que el ID del nodo actual →
-     *       buscar en el subárbol izquierdo</li>
-     *   <li>Si es mayor → buscar en el subárbol derecho</li>
-     *   <li>Si es igual → encontrado, retornar el Item</li>
-     * </ol>
-     * </p>
+     * 
+     * Algoritmo:
+     * 
+     *   Si el nodo actual es null → no encontrado (null)
+     *   Si el ID buscado es menor que el ID del nodo actual →
+     *       buscar en el subárbol izquierdo
+     *   Si es mayor → buscar en el subárbol derecho
+     *   Si es igual → encontrado, retornar el Item
+     * 
+     * 
      *
      * @param id el ID a buscar
      * @return el Item encontrado, o null si no existe
@@ -215,18 +211,18 @@ public class BinaryProductTree {
     // ──────────────────────────────────────────────
 
     /**
-     * Realiza un recorrido <em>Inorden</em> recursivo y retorna la lista
+     * Realiza un recorrido Inorden recursivo y retorna la lista
      * de Items ordenada ascendentemente por ID.
-     * <p>
+     * 
      * El recorrido Inorden visita:
-     * <ol>
-     *   <li>Subárbol izquierdo (IDs menores)</li>
-     *   <li>Raíz (ID actual)</li>
-     *   <li>Subárbol derecho (IDs mayores)</li>
-     * </ol>
+     * 
+     *   Subárbol izquierdo (IDs menores)
+     *   Raíz (ID actual)
+     *   Subárbol derecho (IDs mayores)
+     * 
      * Esto produce automáticamente una secuencia ordenada sin necesidad
      * de algoritmos de ordenamiento adicionales como BubbleSort o QuickSort.
-     * </p>
+     * 
      *
      * @return lista de Items en orden ascendente por ID
      */
